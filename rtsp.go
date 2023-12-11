@@ -384,6 +384,10 @@ func (res Response) String() string {
 		}
 	}
 	s += "\r\n"
+	if res.Body != nil {
+		str, _ := ioutil.ReadAll(res.Body)
+		s += string(str)
+	}
 	return s
 }
 

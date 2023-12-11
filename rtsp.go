@@ -2,9 +2,9 @@ package rtsp
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net"
 	"net/http"
 	"net/url"
@@ -35,6 +35,10 @@ const (
 	SET_PARAMETER = "SET_PARAMETER"
 	// Client to server for presentation and stream objects; required
 	TEARDOWN = "TEARDOWN"
+)
+
+var (
+	NOT_RTSP_PACKET = errors.New("not an RTSP packet")
 )
 
 const (
@@ -154,8 +158,10 @@ func (r Request) String() string {
 	}
 	s += "\r\n"
 	if r.Body != nil {
-		str, _ := ioutil.ReadAll(r.Body)
+		str, _ := io.ReadAll(r.Body)
+		str = str[:r.ContentLength]
 		s += string(str)
+		//fmt.Printf("strlen %d clen %d\n", len(str), r.ContentLength)
 	}
 	return s
 }
@@ -303,6 +309,10 @@ func (c closer) Close() error {
 func ParseRTSPVersion(s string) (proto string, major int, minor int, err error) {
 	parts := strings.SplitN(s, "/", 2)
 	proto = parts[0]
+	if proto != "RTSP" {
+		err = NOT_RTSP_PACKET
+		return
+	}
 	parts = strings.SplitN(parts[1], ".", 2)
 	if major, err = strconv.Atoi(parts[0]); err != nil {
 		return
@@ -350,7 +360,7 @@ func ReadRequest(r io.Reader) (req *Request, err error) {
 	}
 
 	req.ContentLength, _ = strconv.Atoi(req.Header.Get("Content-Length"))
-	fmt.Println("Content Length:", req.ContentLength)
+	//fmt.Println("Content Length:", req.ContentLength)
 	req.Body = closer{b, r}
 	return
 }
@@ -378,8 +388,10 @@ func (res Response) String() string {
 	}
 	s += "\r\n"
 	if res.Body != nil {
-		str, _ := ioutil.ReadAll(res.Body)
+		str, _ := io.ReadAll(res.Body)
+		str = str[:res.ContentLength]
 		s += string(str)
+		//fmt.Printf("strlen %d clen %d\n", len(str), res.ContentLength)
 	}
 	return s
 }

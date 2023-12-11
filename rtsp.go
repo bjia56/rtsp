@@ -376,6 +376,7 @@ func (res Response) String() string {
 			s += fmt.Sprintf("%s: %s\r\n", k, v)
 		}
 	}
+	s += "\r\n"
 	return s
 }
 

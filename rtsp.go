@@ -148,7 +148,7 @@ type Request struct {
 
 func (r Request) String() string {
 	s := fmt.Sprintf("%s %s %s/%d.%d\r\n", r.Method, r.URL, r.Proto, r.ProtoMajor, r.ProtoMinor)
-	keys := make([]string)
+	keys := make([]string, 0)
 	for k := range r.Header {
 		keys = append(keys, k)
 	}

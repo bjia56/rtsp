@@ -307,7 +307,7 @@ func ParseRTSPVersion(s string) (proto string, major int, minor int, err error) 
 	if major, err = strconv.Atoi(parts[0]); err != nil {
 		return
 	}
-	if minor, err = strconv.Atoi(parts[0]); err != nil {
+	if minor, err = strconv.Atoi(parts[1]); err != nil {
 		return
 	}
 	return

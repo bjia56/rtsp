@@ -8,7 +8,6 @@ import (
 	"net"
 	"net/http"
 	"net/url"
-	"sort"
 	"strconv"
 	"strings"
 )
@@ -148,13 +147,7 @@ type Request struct {
 
 func (r Request) String() string {
 	s := fmt.Sprintf("%s %s %s/%d.%d\r\n", r.Method, r.URL, r.Proto, r.ProtoMajor, r.ProtoMinor)
-	keys := make([]string)
-	for k := range r.Header {
-		keys = append(keys, k)
-	}
-	sort.Strings(keys)
-	for k := range keys {
-		v := r.Header[k]
+	for k, v := range r.Header {
 		for _, v := range v {
 			s += fmt.Sprintf("%s: %s\r\n", k, v)
 		}

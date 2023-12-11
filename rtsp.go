@@ -153,7 +153,7 @@ func (r Request) String() string {
 		keys = append(keys, k)
 	}
 	sort.Strings(keys)
-	for _, k := range keys {
+	for k := range keys {
 		v := r.Header[k]
 		for _, v := range v {
 			s += fmt.Sprintf("%s: %s\r\n", k, v)

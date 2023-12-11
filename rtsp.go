@@ -370,10 +370,10 @@ type Response struct {
 }
 
 func (res Response) String() string {
-	s := fmt.Sprintf("%s/%d.%d %d %s\n", res.Proto, res.ProtoMajor, res.ProtoMinor, res.StatusCode, res.Status)
+	s := fmt.Sprintf("%s/%d.%d %d %s\r\n", res.Proto, res.ProtoMajor, res.ProtoMinor, res.StatusCode, res.Status)
 	for k, v := range res.Header {
 		for _, v := range v {
-			s += fmt.Sprintf("%s: %s\n", k, v)
+			s += fmt.Sprintf("%s: %s\r\n", k, v)
 		}
 	}
 	return s
